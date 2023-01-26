@@ -1,0 +1,7 @@
+data/*
+!.keep
+!data/mydata/
+data/mydata/*
+!data/mydata/.keep
+
+test*
