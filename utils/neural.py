@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
 from sklearn.model_selection import train_test_split
+from sklearn.metrics import confusion_matrix, classification_report
 import torch
 import torch.nn as nn
 from torch.utils.data import Dataset, DataLoader
@@ -127,16 +128,20 @@ def create_model(input_size, drop_rate):
     return model
 
 
-def discretize(prob, threshold=0.5):
-    x = 1 if prob >= threshold else 0
-    return x
+def discretize(probs, threshold=0.5):
+    discretized = []
+    for prob in probs:
+        x = 1 if prob[0] >= threshold else 0
+        discretized.append(x)
+    return discretized
 
 
 def get_correct_num(preds, labels, threshold=0.5):
     count = 0
+    preds = discretize(preds)
+    labels = discretize(labels)
     for pred, label in zip(preds, labels):
-        pred = discretize(pred[0])
-        if pred == label[0]:
+        if pred == label:
             count += 1
     return count
 
@@ -211,4 +216,40 @@ def train(train_data, valid_data, model, optimizer=None, criterion=nn.BCELoss(),
                 with open(log_file, 'a')as f:
                     print(f"Early Stop!! epoch={best_epoch}", file=f)
             break
+    return
+
+
+def print_estimate(pred_list, label_list):
+    print('[confusion matrix]')
+    types = ['pop', 'classic']
+    cm = confusion_matrix(label_list, pred_list)
+    column = pd.MultiIndex.from_arrays([['Pred']*len(types), types])
+    index = pd.MultiIndex.from_arrays([['Actual']*len(types), types])
+    cm = pd.DataFrame(data=cm, index=index, columns=column)
+    print(cm)
+
+    print()
+    print('[classification report]')
+    report = classification_report(label_list, pred_list, target_names=types)
+    print(report)
+    return
+
+
+def estimate(test_data, model, batch_size=1, device='cpu'):
+    model.eval()
+    pred_list = []
+    label_list = []
+    loader = DataLoader(
+        test_data, batch_size=batch_size, shuffle=False)
+    with torch.no_grad():
+        for data in loader:
+            scores = data['score'].to(device)
+            labels = data['label'].to(device)
+
+            outputs = model(scores)
+            preds = discretize(outputs)
+            labels = discretize(labels)
+            pred_list.extend(preds)
+            label_list.extend(labels)
+    print_estimate(pred_list, label_list)
     return
