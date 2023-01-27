@@ -17,7 +17,7 @@ class ScoreData(Dataset):
         label = self.labels[index]
         return {
             'score': torch.LongTensor(score),
-            'labels': torch.Tensor(label)
+            'label': label
         }
 
 

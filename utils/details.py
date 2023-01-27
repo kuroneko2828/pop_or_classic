@@ -1,3 +1,6 @@
+import utils.neural
+
+
 def get_score_length(score):
     l = len(score)
     for x in score[::-1]:
@@ -20,3 +23,17 @@ def get_score_lengthes(scores):
                 lengthes[key][l] = 1
         lengthes[key] = sorted(lengthes[key].items(), reverse=True)
     return lengthes
+
+
+def get_breakdown_for_1data(data):
+    breakdown = [0, 0]
+    for i in range(len(data)):
+        breakdown[data[i]['label']] += 1
+    return breakdown
+
+
+def get_breakdown(split_data):
+    breakdowns = {}
+    for type_, data in split_data.items():
+        breakdowns[type_] = get_breakdown_for_1data(data)
+    return breakdowns
