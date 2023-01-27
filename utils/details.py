@@ -28,7 +28,7 @@ def get_score_lengthes(scores):
 def get_breakdown_for_1data(data):
     breakdown = [0, 0]
     for i in range(len(data)):
-        breakdown[data[i]['label']] += 1
+        breakdown[int(data[i]['label'][0])] += 1
     return breakdown
 
 

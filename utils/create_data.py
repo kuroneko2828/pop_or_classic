@@ -75,7 +75,7 @@ def score_to_1d_list(score, input_note_num):
     lst = []
     for note in score:
         lst.extend([note['note'], note['start_time'], note['beeping_time']])
-    zero_padding(score, input_note_num)
+    zero_padding(lst, input_note_num)
     return lst
 
 
