@@ -205,7 +205,6 @@ def train(train_data, valid_data, model, optimizer=None, criterion=nn.BCELoss(),
         loss_valid, acc_valid = calculate_loss_and_accuracy(
             model, dataloader_valid, device, criterion=criterion)
 
-        print_log(epoch, 100, loss_train, acc_train, loss_valid, acc_valid)
         if log_file is not None:
             print_log(epoch, 100, loss_train, acc_train, loss_valid, acc_valid, file=log_file)
 
