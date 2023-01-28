@@ -15,6 +15,14 @@ def main():
     breakdowns = details.get_breakdown(split_data)
     for type_, breakdown in breakdowns.items():
         print(f'{type_}: {breakdown}')
+    print('[beeping_time_avg]')
+    beeping_time_avg = details.get_beeping_time_avg(scores)
+    for key, value in beeping_time_avg.items():
+        print(f'{key}: {value}')
+    print('[score time]')
+    score_time = details.get_score_time(scores)
+    for key, value in score_time.items():
+        print(f'{key}: {value}')
     return
 
 

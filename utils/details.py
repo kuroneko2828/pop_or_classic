@@ -37,3 +37,25 @@ def get_breakdown(split_data):
     for type_, data in split_data.items():
         breakdowns[type_] = get_breakdown_for_1data(data)
     return breakdowns
+
+
+def get_beeping_time_avg(scores):
+    beeping_time_avg = {}
+    for key, value in scores.items():
+        beeping_times = []
+        beeping_num = 0
+        for score in value:
+            beeping_times.extend(score[2::3])
+            beeping_num += get_score_length(score)
+        beeping_time_avg[key] = sum(beeping_times) / beeping_num
+    return beeping_time_avg
+
+
+def get_score_time(scores):
+    score_time = {}
+    for key, value in scores.items():
+        score_time[key] = 0
+        for score in value:
+            score_time[key] += sum(score[1::3])
+        score_time[key] /= len(value)
+    return score_time
